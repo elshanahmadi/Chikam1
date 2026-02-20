@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>برای چیکام 🤍</title>
+<style>
+  :root{--night:#0b0f2a;--purple:#1a1f4a;--star:#ffd86b;--pink:#ffb6c1;--text:#eef1ff}
+  *{box-sizing:border-box;font-family:system-ui,Segoe UI,Tahoma}
+  body{margin:0;background:linear-gradient(#050816,#0b0f2a);color:var(--text);overflow-x:hidden}
+  section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px}
+  h1,h2,p{max-width:700px}
+  button{padding:14px 26px;border:none;border-radius:30px;background:#fff;color:#111;font-size:18px;cursor:pointer;box-shadow:0 8px 25px rgba(0,0,0,.3)}
+  #moon{width:140px;height:140px;background:#fff;border-radius:50%;box-shadow:0 0 60px #fff;margin:20px auto;position:relative}
+  .star{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:blink 2s infinite alternate}
+  @keyframes blink{from{opacity:.2}to{opacity:1}}
+  .hidden{opacity:0;pointer-events:none;transition:.6s}
+  .cat{font-size:80px;animation:float 3s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  #timer{font-size:28px;margin-top:20px}
+  .stars-game span{font-size:50px;cursor:pointer;margin:10px}
+  .hold{background:var(--pink);color:#fff}
+</style>
+</head>
+<body>
+
+<audio id="music" loop>
+  <!-- آهنگ Kiss The Rain رو خودت به اسم kiss.mp3 کنار فایل بذار -->
+  <source src="kiss.mp3" type="audio/mpeg" />
+</audio>
+
+<section id="start">
+  <div class="cat">🐱</div>
+  <div id="moon"></div>
+  <p id="intro"></p>
+  <button id="enter">ببین کی ساخته 👀</button>
+</section>
+
+<section id="about" class="hidden">
+  <p>راستش… من طراح سایت نیستم 😅<br>ولی برای تو یاد گرفتم چون بعضی آدما ارزش اینو دارن که براشون یه دنیا ساخت</p>
+</section>
+
+<section id="time" class="hidden">
+  <p>از اون روزی که وارد زندگیم شدی…</p>
+  <div id="timer"></div>
+</section>
+
+<section id="game" class="hidden">
+  <p>سه تا ستاره قایم شدن ✨</p>
+  <div class="stars-game">
+    <span>⭐</span><span>⭐</span><span>⭐</span>
+  </div>
+  <p id="gameText"></p>
+</section>
+
+<section id="feel" class="hidden">
+  <p>بعضی آدما میان تو زندگی و فقط یه آدم معمولی نیستن<br>میشن آرامش، عادت، دلیل لبخند<br><br>تو برای من همونی چیکام</p>
+</section>
+
+<section id="end" class="hidden">
+  <button class="hold" id="holdBtn">نگه دار…</button>
+  <h1 id="love"></h1>
+  <p id="final"></p>
+</section>
+
+<script>
+// typing intro
+const introText=["هی… صبر کن","قبل از اینکه امروزتو ادامه بدی","یه نفر یه چیزی برات ساخته","فقط برای تو چیکام 🤍"];
+let i=0,j=0;const introEl=document.getElementById('intro');
+function type(){if(i<introText.length){if(j<introText[i].length){introEl.textContent+=introText[i][j++];setTimeout(type,40)}else{introEl.textContent+='\n';i++;j=0;setTimeout(type,600)}}}
+type();
+
+// navigation
+const sections=['about','time','game','feel','end'];let idx=0;
+document.getElementById('enter').onclick=()=>{document.getElementById('music').play();next();}
+function next(){document.getElementById(sections[idx]).classList.remove('hidden');idx++;window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})}
+window.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON'&&idx<sections.length)next()});
+
+// timer
+const startDate=new Date('2023-12-20T00:00:00');
+setInterval(()=>{const now=new Date();const diff=now-startDate;const d=Math.floor(diff/86400000);const h=Math.floor(diff/3600000)%24;const m=Math.floor(diff/60000)%60;document.getElementById('timer').textContent=`${d} روز ${h} ساعت ${m} دقیقه کنار همیم`;},1000);
+
+// stars game
+let found=0;const texts=["حس کردم قبلاً میشناسمت","کنار تو خود واقعیمم","هر روز بیشتر دوستت دارم"];
+document.querySelectorAll('.stars-game span').forEach((s,i)=>s.onclick=()=>{s.textContent='✨';document.getElementById('gameText').textContent=texts[i];found++;if(found===3)setTimeout(next,1200)});
+
+// hold button
+let holdTimer;const hold=document.getElementById('holdBtn');
+hold.onmousedown=()=>{holdTimer=setTimeout(()=>{document.getElementById('love').textContent='عمروووم ♡';setTimeout(()=>document.getElementById('final').textContent='و این تازه شروع ماست… — الشن',1200)},1200)};
+hold.onmouseup=()=>clearTimeout(holdTimer);
+</script>
+
+</body>
+</html>
